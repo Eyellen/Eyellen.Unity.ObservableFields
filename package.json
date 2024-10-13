@@ -1,0 +1,19 @@
+{
+  "name": "com.eyellen.unity.observable-fields",
+  "displayName": "Eyellen.Unity.ObservableFields",
+  "version": "1.0.0",
+  "description": "Package that provides ObservableField class that works perfectly with an Inspector.",
+  "keywords": [
+    "Field",
+    "Property",
+    "Observable"
+  ],
+  "author": {
+    "name": "Eyellen",
+    "email": "eeyellen@gmail.com"
+  },
+  "repository": {
+    "url": "https://github.com/Eyellen/Eyellen.Unity.ObservableFields",
+    "type": "git"
+  }
+}
