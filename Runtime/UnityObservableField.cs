@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public class UnityObservableField<T> : ObservableField<T>
@@ -8,6 +9,18 @@ public class UnityObservableField<T> : ObservableField<T>
     [SerializeField]
     private T m_SerializedValue;
 #endif
+
+    [SerializeField]
+    private bool m_UseUnityEvents;
+
+    [SerializeField]
+    private UnityEvent<EventArgs> m_OnValueChangedEventArgs;
+
+    [SerializeField]
+    private UnityEvent<T, T> m_OnValueChangedTTArgs;
+
+    [SerializeField]
+    private UnityEvent m_OnValueChangedNoArgs;
 
     public UnityObservableField(
         T value = default,
@@ -20,6 +33,7 @@ public class UnityObservableField<T> : ObservableField<T>
         m_SerializedValue = value;
         SubscribeOnChange(OnValueChanged);
 #endif
+        SubscribeOnChange(InvokeUnityEvents);
     }
 
 #if UNITY_EDITOR
@@ -28,4 +42,14 @@ public class UnityObservableField<T> : ObservableField<T>
         m_SerializedValue = args.Current;
     }
 #endif
+
+    private void InvokeUnityEvents(EventArgs args)
+    {
+        if (!m_UseUnityEvents)
+            return;
+
+        m_OnValueChangedEventArgs.Invoke(args);
+        m_OnValueChangedTTArgs.Invoke(args.Previous, args.Current);
+        m_OnValueChangedNoArgs.Invoke();
+    }
 }
