@@ -1,0 +1,18 @@
+{
+    "name": "Eyellen.Unity.ObservableFields.Editor",
+    "rootNamespace": "Eyellen.Unity.ObservableFields.Editor",
+    "references": [
+        "GUID:f6811453501b148409147f61597356f9"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
