@@ -2,54 +2,57 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable]
-public class UnityObservableField<T> : ObservableField<T>
+namespace Eyellen.Unity.ObservableFields
 {
-#if UNITY_EDITOR
-    [SerializeField]
-    private T m_SerializedValue;
-#endif
-
-    [SerializeField]
-    private bool m_UseUnityEvents;
-
-    [SerializeField]
-    private UnityEvent<EventArgs> m_OnValueChangedEventArgs;
-
-    [SerializeField]
-    private UnityEvent<T, T> m_OnValueChangedTTArgs;
-
-    [SerializeField]
-    private UnityEvent m_OnValueChangedNoArgs;
-
-    public UnityObservableField(
-        T value = default,
-        Func<T, T> setterFunc = null,
-        Func<T, T> getterFunc = null
-    )
-        : base(value, setterFunc, getterFunc)
+    [Serializable]
+    public class UnityObservableField<T> : ObservableField<T>
     {
 #if UNITY_EDITOR
-        m_SerializedValue = value;
-        SubscribeOnChange(OnValueChanged);
+        [SerializeField]
+        private T m_SerializedValue;
 #endif
-        SubscribeOnChange(InvokeUnityEvents);
-    }
+
+        [SerializeField]
+        private bool m_UseUnityEvents;
+
+        [SerializeField]
+        private UnityEvent<EventArgs> m_OnValueChangedEventArgs;
+
+        [SerializeField]
+        private UnityEvent<T, T> m_OnValueChangedTTArgs;
+
+        [SerializeField]
+        private UnityEvent m_OnValueChangedNoArgs;
+
+        public UnityObservableField(
+            T value = default,
+            Func<T, T> setterFunc = null,
+            Func<T, T> getterFunc = null
+        )
+            : base(value, setterFunc, getterFunc)
+        {
+#if UNITY_EDITOR
+            m_SerializedValue = value;
+            SubscribeOnChange(OnValueChanged);
+#endif
+            SubscribeOnChange(InvokeUnityEvents);
+        }
 
 #if UNITY_EDITOR
-    private void OnValueChanged(EventArgs args)
-    {
-        m_SerializedValue = args.Current;
-    }
+        private void OnValueChanged(EventArgs args)
+        {
+            m_SerializedValue = args.Current;
+        }
 #endif
 
-    private void InvokeUnityEvents(EventArgs args)
-    {
-        if (!m_UseUnityEvents)
-            return;
+        private void InvokeUnityEvents(EventArgs args)
+        {
+            if (!m_UseUnityEvents)
+                return;
 
-        m_OnValueChangedEventArgs.Invoke(args);
-        m_OnValueChangedTTArgs.Invoke(args.Previous, args.Current);
-        m_OnValueChangedNoArgs.Invoke();
+            m_OnValueChangedEventArgs.Invoke(args);
+            m_OnValueChangedTTArgs.Invoke(args.Previous, args.Current);
+            m_OnValueChangedNoArgs.Invoke();
+        }
     }
 }
