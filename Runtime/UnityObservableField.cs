@@ -13,6 +13,7 @@ namespace Eyellen.Unity.ObservableFields
 #endif
 
         [SerializeField]
+        [Tooltip("Check this if you want the ObservableField to call Unity Events")]
         private bool m_UseUnityEvents;
 
         [SerializeField]
