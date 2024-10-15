@@ -12,6 +12,7 @@ namespace Eyellen.Unity.ObservableFields.Editor
         private const string m_UseUnityEventsPath = "m_UseUnityEvents";
         private const string m_OnValueChangedEventArgsPath = "m_OnValueChangedEventArgs";
         private const string m_OnValueChangeTTArgsPath = "m_OnValueChangedTTArgs";
+        private const string m_OnValueChangedCurrentArgPath = "m_OnValueChangedCurrentArg";
         private const string m_OnValueChangeNoArgsPath = "m_OnValueChangedNoArgs";
 
         private bool m_ShowUnityEvents;
@@ -51,6 +52,10 @@ namespace Eyellen.Unity.ObservableFields.Editor
                         );
                         EditorGUILayout.PropertyField(
                             property.FindPropertyRelative(m_OnValueChangeTTArgsPath),
+                            m_EventLabel
+                        );
+                        EditorGUILayout.PropertyField(
+                            property.FindPropertyRelative(m_OnValueChangedCurrentArgPath),
                             m_EventLabel
                         );
                         EditorGUILayout.PropertyField(

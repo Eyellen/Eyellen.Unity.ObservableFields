@@ -23,6 +23,9 @@ namespace Eyellen.Unity.ObservableFields
         private UnityEvent<T, T> m_OnValueChangedTTArgs;
 
         [SerializeField]
+        private UnityEvent<T> m_OnValueChangedCurrentArg;
+
+        [SerializeField]
         private UnityEvent m_OnValueChangedNoArgs;
 
         public UnityObservableField(
@@ -53,6 +56,7 @@ namespace Eyellen.Unity.ObservableFields
 
             m_OnValueChangedEventArgs.Invoke(args);
             m_OnValueChangedTTArgs.Invoke(args.Previous, args.Current);
+            m_OnValueChangedCurrentArg.Invoke(args.Current);
             m_OnValueChangedNoArgs.Invoke();
         }
     }
