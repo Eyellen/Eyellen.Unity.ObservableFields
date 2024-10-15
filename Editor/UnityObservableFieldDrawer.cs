@@ -26,20 +26,25 @@ namespace Eyellen.Unity.ObservableFields.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            bool hasBeenChanged = false;
+            bool valueHasBeenChanged = false;
+
+            SerializedProperty valueProperty = property.FindPropertyRelative(m_SerializedValuePath);
+            SerializedProperty useUnityEventsProperty = property.FindPropertyRelative(
+                m_UseUnityEventsPath
+            );
+
+            if (valueProperty == null)
+                return;
 
             EditorGUI.BeginProperty(position, label, property);
             {
                 EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(
-                    property.FindPropertyRelative(m_SerializedValuePath),
-                    label
-                );
-                hasBeenChanged = EditorGUI.EndChangeCheck();
+                EditorGUILayout.PropertyField(valueProperty, label);
+                valueHasBeenChanged = EditorGUI.EndChangeCheck();
 
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(property.FindPropertyRelative(m_UseUnityEventsPath));
-                bool useUnityEvents = property.FindPropertyRelative(m_UseUnityEventsPath).boolValue;
+                EditorGUILayout.PropertyField(useUnityEventsProperty);
+                bool useUnityEvents = useUnityEventsProperty.boolValue;
                 if (useUnityEvents)
                 {
                     m_ShowUnityEvents = EditorGUILayout.Foldout(m_ShowUnityEvents, "Events");
@@ -71,7 +76,7 @@ namespace Eyellen.Unity.ObservableFields.Editor
             if (property.serializedObject.hasModifiedProperties)
                 property.serializedObject.ApplyModifiedProperties();
 
-            if (hasBeenChanged)
+            if (valueHasBeenChanged)
             {
                 AssignValue(property);
                 property.serializedObject.ApplyModifiedProperties();
