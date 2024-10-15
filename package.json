@@ -15,5 +15,11 @@
   "repository": {
     "url": "https://github.com/Eyellen/Eyellen.Unity.ObservableFields",
     "type": "git"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Observable Field Examples",
+      "path": "Samples~/ObservableFieldExamples"
+    }
+  ]
 }
