@@ -278,7 +278,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: caaeeede4514f0440879d4cba55b0197, type: 2}
+  - {fileID: 2100000, guid: 3e3592f99db41bb409c47ca04e8fc67f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -686,8 +686,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1064173059}
-  - component: {fileID: 1064173058}
-  - component: {fileID: 1064173061}
   - component: {fileID: 1064173060}
   m_Layer: 0
   m_Name: ObservableFieldExample
@@ -696,7 +694,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1064173058
+--- !u!4 &1064173059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064173057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1064173060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -705,7 +718,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1064173057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63fc297283e8a06458b35e5cacd4bb02, type: 3}
+  m_Script: {fileID: 11500000, guid: 179ae9e4ef87b8a45b5b01e31abd48c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsCubeActive:
@@ -763,7 +776,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   Color:
-    m_SerializedValue: {r: 1, g: 0, b: 0, a: 1}
+    m_SerializedValue: {r: 1, g: 0, b: 0, a: 0}
     m_UseUnityEvents: 1
     m_OnValueChangedEventArgs:
       m_PersistentCalls:
@@ -774,7 +787,7 @@ MonoBehaviour:
     m_OnValueChangedCurrentArg:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 2100000, guid: caaeeede4514f0440879d4cba55b0197, type: 2}
+        - m_Target: {fileID: 2100000, guid: 3e3592f99db41bb409c47ca04e8fc67f, type: 2}
           m_TargetAssemblyTypeName: UnityEngine.Material, UnityEngine
           m_MethodName: set_color
           m_Mode: 0
@@ -786,121 +799,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
-    m_OnValueChangedNoArgs:
-      m_PersistentCalls:
-        m_Calls: []
---- !u!4 &1064173059
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064173057}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1064173060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064173057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5deb4188e3190f498f2915207eb91a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservableInt:
-    m_SerializedValue: 10
-    m_UseUnityEvents: 0
-    m_OnValueChangedEventArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedTTArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedCurrentArg:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedNoArgs:
-      m_PersistentCalls:
-        m_Calls: []
-  ObservableFloat:
-    m_SerializedValue: 134
-    m_UseUnityEvents: 0
-    m_OnValueChangedEventArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedTTArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedCurrentArg:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedNoArgs:
-      m_PersistentCalls:
-        m_Calls: []
---- !u!114 &1064173061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064173057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48e223e7a3e595541a3ef6cde484eb9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UnityObservableBool:
-    m_SerializedValue: 0
-    m_UseUnityEvents: 0
-    m_OnValueChangedEventArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedTTArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedCurrentArg:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedNoArgs:
-      m_PersistentCalls:
-        m_Calls: []
-  SerializableType:
-    m_SerializedValue:
-      Name: 
-      Description: 
-    m_UseUnityEvents: 0
-    m_OnValueChangedEventArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedTTArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedCurrentArg:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedNoArgs:
-      m_PersistentCalls:
-        m_Calls: []
-  NonSerializableType:
-    m_UseUnityEvents: 0
-    m_OnValueChangedEventArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedTTArgs:
-      m_PersistentCalls:
-        m_Calls: []
-    m_OnValueChangedCurrentArg:
-      m_PersistentCalls:
-        m_Calls: []
     m_OnValueChangedNoArgs:
       m_PersistentCalls:
         m_Calls: []
