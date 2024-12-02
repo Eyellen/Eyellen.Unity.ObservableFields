@@ -43,7 +43,7 @@ namespace Eyellen.Unity.ObservableFields.Editor
             if (valueProperty == null)
                 return;
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
             {
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.PropertyField(valueProperty, label);
