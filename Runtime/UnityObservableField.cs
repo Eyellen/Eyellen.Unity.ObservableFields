@@ -28,6 +28,12 @@ namespace Eyellen.Unity.ObservableFields
         [SerializeField]
         private UnityEvent m_OnValueChangedNoArgs;
 
+        public UnityObservableField()
+            : base()
+        {
+            Initialize();
+        }
+
         public UnityObservableField(
             T value = default,
             Func<T, T> setterFunc = null,
@@ -37,6 +43,13 @@ namespace Eyellen.Unity.ObservableFields
         {
 #if UNITY_EDITOR
             m_SerializedValue = value;
+#endif
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+#if UNITY_EDITOR
             SubscribeOnChange(OnValueChanged);
 #endif
             SubscribeOnChange(InvokeUnityEvents);
