@@ -16,6 +16,7 @@ Paste and press "Add"
 `ObservableField` - Does not support inspector and uses only pure C# features.</br>
 `UnityObservableField` - Supports inspector, uses C# and Unity events. You can assign Unity events in the inspector.</br>
 `IReadOnlyObservableField` - Read only interface for observable fields. Allows to get read only value and subscribe to changes.</br>
+`IObservableFieldEvents` - Interface that provides methods to subscribe or unsubscribe from changes.</br>
 
 # Important Notes
 
