@@ -20,8 +20,9 @@ Paste and press "Add"
 # Important Notes
 
 - You must call constructor for observable fields, otherwise it will give a `NullReferenceException`.
-- If you want Unity events to be called in edit mode make sure to set `UnityEventCallState` to `EditorAndRuntime` in the inspector, it's next to each method reference.
+- If you want Unity events to be called in edit mode make sure to set `UnityEventCallState` to `EditorAndRuntime` in the inspector, it's next to each method reference in the unity event property. If you want C# events to be called in edit mode make sure to add `ExecuteAlwaysAttribute` to your class.
 - If you pass your custom type to `UnityObservableField` and want it to appear in the inspector make sure to add `SerializableAttribute` to your type.
+- Remember that reference types are reference types, `ObservableField` will not fire events when reference type's members will be changed, it will fire event only if the reference itself is changed. If you need to fire event when complex object is changed prefer using structs.
 
 # Usage
 
