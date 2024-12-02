@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,6 +20,11 @@ namespace Eyellen.Unity.ObservableFields.Editor
         private bool m_ShowUnityEvents;
 
         private GUIContent m_EventLabel = new GUIContent("On Value Changed");
+
+        private static Regex s_RegexArrayElement = new Regex(
+            @"(.*)\[(\d*)\]",
+            RegexOptions.Compiled
+        );
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -78,31 +85,81 @@ namespace Eyellen.Unity.ObservableFields.Editor
 
             if (valueHasBeenChanged)
             {
-                AssignValue(property);
+                AssignNewValue(property);
                 property.serializedObject.ApplyModifiedProperties();
             }
         }
 
-        private void AssignValue(SerializedProperty property)
+        private void AssignNewValue(SerializedProperty property)
         {
+            object target = GetPropertyTargetObject(property);
+
+            Type targetType = target.GetType();
+
             BindingFlags flags =
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            UnityEngine.Object targetObject = property.serializedObject.targetObject;
+            object newValue = targetType.GetField(m_SerializedValuePath, flags).GetValue(target);
 
-            object propertyValue = targetObject
-                .GetType()
-                .GetField(property.name, flags)
-                .GetValue(targetObject);
+            MethodInfo setMethod = targetType.BaseType.GetProperty("Value", flags).GetSetMethod();
+            setMethod.Invoke(target, new[] { newValue });
+        }
 
-            Type propertyType = propertyValue.GetType();
+        private static object GetPropertyTargetObject(SerializedProperty property)
+        {
+            BindingFlags flags =
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            object value = propertyType
-                .GetField(m_SerializedValuePath, flags)
-                .GetValue(propertyValue);
+            object component = property.serializedObject.targetObject;
 
-            MethodInfo setMethod = propertyType.BaseType.GetProperty("Value", flags).GetSetMethod();
-            setMethod.Invoke(propertyValue, new[] { value });
+            string propertyPath = property.propertyPath;
+
+            string[] fields = propertyPath.Replace(".Array.data[", "[").Split(".");
+
+            object target = component;
+            foreach (string field in fields)
+            {
+                Type targetType = target.GetType();
+
+                Match match = s_RegexArrayElement.Match(field);
+                bool isArray = match.Success;
+                if (isArray)
+                {
+                    string fieldName = match.Groups[1].Value;
+                    int index = int.Parse(match.Groups[2].Value);
+
+                    IEnumerable enumerable = (IEnumerable)GetValue(target, fieldName, flags);
+                    IEnumerator enumerator = enumerable.GetEnumerator();
+                    for (int i = 0; i <= index; i++)
+                        enumerator.MoveNext();
+                    target = enumerator.Current;
+                }
+                else
+                {
+                    target = GetValue(target, field, flags);
+                }
+            }
+
+            return target;
+        }
+
+        private static object GetValue(object obj, string name, BindingFlags bindingFlags = default)
+        {
+            Type type = obj.GetType();
+            while (type != null)
+            {
+                FieldInfo field = type.GetField(name, bindingFlags);
+                if (field != null)
+                    return field.GetValue(obj);
+
+                PropertyInfo property = type.GetProperty(name, bindingFlags);
+                if (property != null)
+                    return property.GetValue(obj);
+
+                type = type.BaseType;
+            }
+
+            return null;
         }
     }
 }
