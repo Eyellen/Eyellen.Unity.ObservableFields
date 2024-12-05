@@ -10,16 +10,15 @@ namespace Eyellen.Unity.ObservableFields.Editor
     [CustomPropertyDrawer(typeof(UnityObservableField<>))]
     public class UnityObservableFieldDrawer : PropertyDrawer
     {
-        private const string m_SerializedValuePath = "m_SerializedValue";
-        private const string m_UseUnityEventsPath = "m_UseUnityEvents";
-        private const string m_OnValueChangedEventArgsPath = "m_OnValueChangedEventArgs";
-        private const string m_OnValueChangeTTArgsPath = "m_OnValueChangedTTArgs";
-        private const string m_OnValueChangedCurrentArgPath = "m_OnValueChangedCurrentArg";
-        private const string m_OnValueChangeNoArgsPath = "m_OnValueChangedNoArgs";
+        private const string k_SerializedValuePath = "m_SerializedValue";
+        private const string k_UseUnityEventsPath = "m_UseUnityEvents";
+        private const string k_OnValueChangedEventArgsPath = "m_OnValueChangedEventArgs";
+        private const string k_OnValueChangeTTArgsPath = "m_OnValueChangedTTArgs";
+        private const string k_OnValueChangedCurrentArgPath = "m_OnValueChangedCurrentArg";
+        private const string k_OnValueChangeNoArgsPath = "m_OnValueChangedNoArgs";
+        private const string k_ShowUnityEventsPath = "m_ShowUnityEvents";
 
-        private bool m_ShowUnityEvents;
-
-        private GUIContent m_EventLabel = new GUIContent("On Value Changed");
+        private static GUIContent s_EventLabel = new GUIContent("On Value Changed");
 
         private static Regex s_RegexArrayElement = new Regex(
             @"(.*)\[(\d*)\]",
@@ -35,9 +34,12 @@ namespace Eyellen.Unity.ObservableFields.Editor
         {
             bool valueHasBeenChanged = false;
 
-            SerializedProperty valueProperty = property.FindPropertyRelative(m_SerializedValuePath);
+            SerializedProperty valueProperty = property.FindPropertyRelative(k_SerializedValuePath);
             SerializedProperty useUnityEventsProperty = property.FindPropertyRelative(
-                m_UseUnityEventsPath
+                k_UseUnityEventsPath
+            );
+            SerializedProperty showUnityEvents = property.FindPropertyRelative(
+                k_ShowUnityEventsPath
             );
 
             if (valueProperty == null)
@@ -54,25 +56,28 @@ namespace Eyellen.Unity.ObservableFields.Editor
                 bool useUnityEvents = useUnityEventsProperty.boolValue;
                 if (useUnityEvents)
                 {
-                    m_ShowUnityEvents = EditorGUILayout.Foldout(m_ShowUnityEvents, "Events");
+                    showUnityEvents.boolValue = EditorGUILayout.Foldout(
+                        showUnityEvents.boolValue,
+                        "Events"
+                    );
 
-                    if (m_ShowUnityEvents)
+                    if (showUnityEvents.boolValue)
                     {
                         EditorGUILayout.PropertyField(
-                            property.FindPropertyRelative(m_OnValueChangedEventArgsPath),
-                            m_EventLabel
+                            property.FindPropertyRelative(k_OnValueChangedEventArgsPath),
+                            s_EventLabel
                         );
                         EditorGUILayout.PropertyField(
-                            property.FindPropertyRelative(m_OnValueChangeTTArgsPath),
-                            m_EventLabel
+                            property.FindPropertyRelative(k_OnValueChangeTTArgsPath),
+                            s_EventLabel
                         );
                         EditorGUILayout.PropertyField(
-                            property.FindPropertyRelative(m_OnValueChangedCurrentArgPath),
-                            m_EventLabel
+                            property.FindPropertyRelative(k_OnValueChangedCurrentArgPath),
+                            s_EventLabel
                         );
                         EditorGUILayout.PropertyField(
-                            property.FindPropertyRelative(m_OnValueChangeNoArgsPath),
-                            m_EventLabel
+                            property.FindPropertyRelative(k_OnValueChangeNoArgsPath),
+                            s_EventLabel
                         );
                     }
                 }
@@ -84,13 +89,10 @@ namespace Eyellen.Unity.ObservableFields.Editor
                 property.serializedObject.ApplyModifiedProperties();
 
             if (valueHasBeenChanged)
-            {
                 AssignNewValue(property);
-                property.serializedObject.ApplyModifiedProperties();
-            }
         }
 
-        private void AssignNewValue(SerializedProperty property)
+        private static void AssignNewValue(SerializedProperty property)
         {
             object target = GetPropertyTargetObject(property);
 
@@ -99,10 +101,12 @@ namespace Eyellen.Unity.ObservableFields.Editor
             BindingFlags flags =
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            object newValue = targetType.GetField(m_SerializedValuePath, flags).GetValue(target);
+            object newValue = targetType.GetField(k_SerializedValuePath, flags).GetValue(target);
 
             MethodInfo setMethod = targetType.BaseType.GetProperty("Value", flags).GetSetMethod();
             setMethod.Invoke(target, new[] { newValue });
+
+            property.serializedObject.ApplyModifiedProperties();
         }
 
         private static object GetPropertyTargetObject(SerializedProperty property)

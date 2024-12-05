@@ -10,6 +10,10 @@ namespace Eyellen.Unity.ObservableFields
 #if UNITY_EDITOR
         [SerializeField]
         private T m_SerializedValue;
+
+        [SerializeField]
+        [HideInInspector]
+        private bool m_ShowUnityEvents;
 #endif
 
         [SerializeField]
