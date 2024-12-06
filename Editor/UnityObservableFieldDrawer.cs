@@ -1,3 +1,4 @@
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
 using System;
 using System.Collections;
 using System.Reflection;
@@ -89,7 +90,11 @@ namespace Eyellen.Unity.ObservableFields.Editor
                 property.serializedObject.ApplyModifiedProperties();
 
             if (valueHasBeenChanged)
+            {
                 AssignNewValue(property);
+                IUndoRedoStack stack = (IUndoRedoStack)GetPropertyTargetObject(property);
+                stack.Push();
+            }
         }
 
         private static void AssignNewValue(SerializedProperty property)
@@ -167,3 +172,4 @@ namespace Eyellen.Unity.ObservableFields.Editor
         }
     }
 }
+#endif

@@ -1,21 +1,29 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
+using System.Collections.Generic;
+using UnityEditor;
+#endif
 
 namespace Eyellen.Unity.ObservableFields
 {
     [Serializable]
-    public class UnityObservableField<T> : ObservableField<T>
+    public class UnityObservableField<T> : ObservableField<T>, IDisposable
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
+            , IUndoRedoStack
     {
-#if UNITY_EDITOR
         [SerializeField]
         private T m_SerializedValue;
 
         [SerializeField]
         [HideInInspector]
         private bool m_ShowUnityEvents;
-#endif
 
+        private Stack<int> m_UndoGroupStack = new();
+#else
+    {
+#endif
         [SerializeField]
         [Tooltip("Check this if you want the ObservableField to call Unity Events")]
         private bool m_UseUnityEvents;
@@ -45,7 +53,7 @@ namespace Eyellen.Unity.ObservableFields
         )
             : base(value, setterFunc, getterFunc)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
             m_SerializedValue = value;
 #endif
             Initialize();
@@ -53,18 +61,19 @@ namespace Eyellen.Unity.ObservableFields
 
         private void Initialize()
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
             SubscribeOnChange(OnValueChanged);
 #endif
             SubscribeOnChange(InvokeUnityEvents);
         }
 
-#if UNITY_EDITOR
-        private void OnValueChanged(EventArgs args)
+        public void Dispose()
         {
-            m_SerializedValue = args.Current;
-        }
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
+            Undo.undoRedoEvent -= OnUndoRedo;
+            m_UndoGroupStack.Clear();
 #endif
+        }
 
         private void InvokeUnityEvents(EventArgs args)
         {
@@ -76,5 +85,37 @@ namespace Eyellen.Unity.ObservableFields
             m_OnValueChangedCurrentArg.Invoke(args.Current);
             m_OnValueChangedNoArgs.Invoke();
         }
+
+#if UNITY_EDITOR && !OBSERVABLE_FIELDS_EDITOR_DISABLE
+        private void OnValueChanged(EventArgs args)
+        {
+            m_SerializedValue = args.Current;
+        }
+
+        private void OnUndoRedo(in UndoRedoInfo info)
+        {
+            if (m_UndoGroupStack.Count <= 0)
+            {
+                Undo.undoRedoEvent -= OnUndoRedo;
+                return;
+            }
+
+            if (info.undoGroup != m_UndoGroupStack.Peek())
+                return;
+
+            m_UndoGroupStack.Pop();
+
+            Value = m_SerializedValue;
+        }
+
+        void IUndoRedoStack.Push()
+        {
+            Undo.undoRedoEvent -= OnUndoRedo;
+            Undo.undoRedoEvent += OnUndoRedo;
+
+            int group = Undo.GetCurrentGroup();
+            m_UndoGroupStack.Push(group);
+        }
+#endif
     }
 }
