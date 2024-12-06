@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Eyellen.Unity.ObservableFields
 {
@@ -21,6 +22,7 @@ namespace Eyellen.Unity.ObservableFields
             }
         }
 
+        [SerializeField]
         private T m_Value;
 
         public T Value
