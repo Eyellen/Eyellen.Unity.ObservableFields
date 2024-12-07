@@ -86,7 +86,7 @@ namespace Eyellen.Unity.ObservableFields.Editor
             EditorGUI.EndProperty();
 
             if (property.serializedObject.hasModifiedProperties)
-                property.serializedObject.ApplyModifiedProperties();
+                property.serializedObject.ApplyModifiedPropertiesWithoutUndo();
 
             if (valueHasBeenChanged)
                 AssignNewValue(property);
@@ -106,7 +106,7 @@ namespace Eyellen.Unity.ObservableFields.Editor
             MethodInfo setMethod = targetType.BaseType.GetProperty("Value", flags).GetSetMethod();
             setMethod.Invoke(target, new[] { newValue });
 
-            property.serializedObject.ApplyModifiedProperties();
+            property.serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static object GetPropertyTargetObject(SerializedProperty property)
